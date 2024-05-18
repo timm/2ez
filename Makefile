@@ -1,3 +1,8 @@
+SSHELL     := bash 
+MAKEFLAGS += --warn-undefined-variables
+.SILENT: 
+Root=$(shell git rev-parse --show-toplevel)
+
 help      :  ## show help
 	awk 'BEGIN {FS = ":.*?## "; print "\nmake [WHAT]" } \
 			/^[^[:space:]].*##/ {printf "   \033[36m%-10s\033[0m : %s\n", $$1, $$2} \
