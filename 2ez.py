@@ -23,7 +23,7 @@ class o:
 # e.g. `./2ez.py -d 4` changes `the.decs` to 4.
 the = o(
         decs  = 3,          # show floats to this many decimals
-        file  = "../../ezr/data/misc/auto93.csv",
+        file  = "data/misc/auto93.csv",
         k     = 1,          # naive bayes low frequency hack
         label = 4,          # initial number of labellings
         Last  = 30,         # max allow labellings
@@ -162,7 +162,8 @@ def like4num(num,x):
   return min(1, nom/(denom + 1E-30))
 
 #--------- --------- --------- --------- --------- --------- --------- --------- --------
-# ## Incremental Optimization
+# ## Sequential model optimization
+# Assumes we can access everyone's indepent variablesOptimization
 
 def smo(data, score=lambda B,R: B-R):
   def guess(todo, done):
@@ -224,6 +225,8 @@ def cyan(s):   return re.sub(r"(.*)", r"\033[96m\1\033[00m",s)
 def btw(*args, **kwargs):
     print(*args, file=sys.stderr, end="", flush=True, **kwargs)
 #--------- --------- --------- --------- --------- --------- --------- --------- ---------
+def main(): cli(the.__dict__); run(the.Run)
+
 def run(s):
   def run1():
     try:
@@ -245,7 +248,7 @@ class eg:
     print(yellow(f"Settings:"))
     [print(green(f" -{k[0]} {k:5} = {v}")) for k,v in the.__dict__.items()]
     print(yellow(f"\nStart-up commands:"))
-    [print(green(f" -A {k} ")) for k in sorted(dir(eg)) if k[0] !=  "_"]
+    [print(green(f" -R {k} ")) for k in sorted(dir(eg)) if k[0] !=  "_"]
 
   def aa(): a=[]; a[3]
 
@@ -294,7 +297,5 @@ class eg:
     print("mid",show(mid(b4)), show(mid(now)),show(b4.lo))
     print("div",show(div(b4)), show(div(now)))
 #--------- --------- --------- --------- --------- --------- --------- --------- ---------
-if __name__ == "__main__":
-  cli(the.__dict__)
-  run(the.Run)
+if __name__ == "__main__": main()
 
