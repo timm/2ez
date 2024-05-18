@@ -9,7 +9,7 @@ help      :  ## show help
 			' $(MAKEFILE_LIST)
 
 saved     : ## save and push to main branch 
-	read -p "commit msg> " x; x=$${name:-saved};  git commit -am "$$x}"; git push;  git status; echo "[$$x], committed!"
+	read -p "commit msg> " x; x=$${x:-saved};  git commit -am "$$x}"; git push;  git status; echo "[$$x], committed!"
 
 name:
 	read -p "word> " w; figlet -f mini -W $$w  | gawk '$$0 {print "#        "$$0}' |pbcopy
