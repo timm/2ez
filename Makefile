@@ -1,5 +1,16 @@
-saved:
-	git commit -am as; git push; git status
+help      :  ## show help
+	awk 'BEGIN {FS = ":.*?## "; print "\nmake [WHAT]" } \
+			/^[^[:space:]].*##/ {printf "   \033[36m%-10s\033[0m : %s\n", $$1, $$2} \
+			' $(MAKEFILE_LIST)
+
+saved     : ## save and push to main branch 
+	read -p "commit msg> " x; x=$${name:-saved};  git commit -am "$$x}"; git push;  git status; echo "$$x, saved!"
+
+name:
+	read -p "word> " w; figlet -f mini -W $$w  | gawk '$$0 {print "#        "$$0}' |pbcopy
+
+install   : ## install as  a local python package
+	pip install -e  . --break-system-packages 
 
 ~/tmp/%.html : %.py %.png
 	mkdir -p $(dir $@)
