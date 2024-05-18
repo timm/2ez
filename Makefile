@@ -5,11 +5,11 @@ Root=$(shell git rev-parse --show-toplevel)
 
 help      :  ## show help
 	awk 'BEGIN {FS = ":.*?## "; print "\nmake [WHAT]" } \
-			/^[^[:space:]].*##/ {printf "   \033[36m%-10s\033[0m : %s\n", $$1, $$2} \
+			/^[^[:space:]].*##/ {printf "   \033[36m%-15s\033[0m : %s\n", $$1, $$2} \
 			' $(MAKEFILE_LIST)
 
 saved     : ## save and push to main branch 
-	read -p "commit msg> " x; x=$${name:-saved};  git commit -am "$$x}"; git push;  git status; echo "$$x, saved!"
+	read -p "commit msg> " x; x=$${name:-saved};  git commit -am "$$x}"; git push;  git status; echo "[$$x], committed!"
 
 name:
 	read -p "word> " w; figlet -f mini -W $$w  | gawk '$$0 {print "#        "$$0}' |pbcopy
@@ -17,7 +17,7 @@ name:
 install   : ## install as  a local python package
 	pip install -e  . --break-system-packages 
 
-~/tmp/%.html : %.py %.png
+~/tmp/%.html : %.py %.png ## .py ==> .html
 	mkdir -p $(dir $@)
 	pycco -d $(dir $@) $<
 	echo 'p {text-align: right;}' >> $(dir $@)/pycco.css
@@ -25,7 +25,7 @@ install   : ## install as  a local python package
 	cp $(basename $<).png $(dir $@)
 	open $@
 
-~/tmp/%.pdf: %.py  ## .lua ==> .pdf
+~/tmp/%.pdf: %.py  ## .py ==> .pdf
 	mkdir -p $(dirname $@)
 	echo "pdf-ing $@ ... "
 	a2ps                 \
