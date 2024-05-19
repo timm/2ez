@@ -23,6 +23,7 @@ docs/%.html : %.py %.png ## .py ==> .html
 	echo 'p {text-align: right;}' >> $(dir $@)/pycco.css
 	sed -i '' 's/$< : /<img src="$(basename $<).png" align=left width=170>&/' $@
 	cp $(basename $<).png $(dir $@)
+	cp $@ $(dir $@)/index.html
 	open $@
 
 ~/tmp/%.pdf: %.py  ## .py ==> .pdf
