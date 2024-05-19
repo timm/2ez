@@ -295,8 +295,10 @@ class eg:
     d= data(src=csv(the.file))
     b4=adds(NUM(), [d2h(d,row) for row in d.rows])
     now=adds(NUM(), [d2h(d, smo(d)[0]) for _ in range(20)])
-    print("mid",show(mid(b4)), show(mid(now)),show(b4.lo))
-    print("div",show(div(b4)), show(div(now)))
+    sep=",\t"
+    print("mid",show(mid(b4)), show(mid(now)),show(b4.lo),sep=sep,end=sep)
+    print("div",show(div(b4)), show(div(now)),sep=sep,end=sep)
+    print(the.file)
 #--------- --------- --------- --------- --------- --------- --------- --------- ---------
 if __name__ == "__main__": main()
 

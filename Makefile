@@ -1,6 +1,10 @@
-#SSHELL     := bash 
-#MAKEFLAGS += --warn-undefined-variables
-#.SILENT:  
+HOME=<a href="http://github.com/timm/2ez">home</a>
+LICENSE=<a href="https://github.com/timm/2ez/blob/main/LICENSE">issues</a>
+ISSUES=<a href="http://github.com/timm/2ez/issues">issues</a>
+#----------------------------------------------------------
+SHELL     := bash 
+MAKEFLAGS += --warn-undefined-variables
+.SILENT:  
 Root=$(shell git rev-parse --show-toplevel)
 
 help      :  ## show help
@@ -17,10 +21,6 @@ name:
 install   : ## install as  a local python package
 	pip install -e  . --break-system-packages 
 
-HOME=<a href="http://github.com/timm/2ez">home<\/a>
-ISSUES=<a href="http://github.com/timm/2ez/issues">issues<\/a>
-LICENSE=<a href="http://github.com/timm/2ez/LICENSE">license<\/a>
-
 docs/%.html : %.py %.png ## .py ==> .html
 	mkdir -p $(dir $@)
 	pycco -d $(dir $@) $<
@@ -28,7 +28,7 @@ docs/%.html : %.py %.png ## .py ==> .html
 	sed -i '' 's/$< : /<img src="$(basename $<).png" align=left width=170>&/' $@
 	sed -i '' 's?<h1>?$(HOME) | $(ISSUES) | $(LICENSE)<hr> &?' $@
 	cp $(basename $<).png $(dir $@)
-	cp $@ $(dir $@)/index.html
+	cp $@ $(dir $@)index.html
 	open $@
 
 ~/tmp/%.pdf: %.py  ## .py ==> .pdf
@@ -50,3 +50,15 @@ docs/%.html : %.py %.png ## .py ==> .html
 	ps2pdf $@.ps $@; rm $@.ps    
 	open $@
 
+OUTS= $(subst data/config,var/out,$(wildcard data/config/*.csv)) \
+      $(subst data/misc,var/out,$(wildcard data/misc/*.csv)) \
+      $(subst data/process,var/out,$(wildcard data/process/*.csv)) \
+      $(subst data/hpo,var/out,$(wildcard data/hpo/*.csv))
+
+var/out/%.csv : data/config/%.csv  ; ./2ez.py -f $< -R smo20 | tee $@
+var/out/%.csv : data/misc/%.csv    ; ./2ez.py -f $< -R smo20 | tee $@
+var/out/%.csv : data/process/%.csv ; ./2ez.py -f $< -R smo20 | tee $@
+var/out/%.csv : data/hpo/%.csv     ; ./2ez.py -f $< -R smo20 | tee $@
+
+eg1: 
+	echo $(OUTS) #$(MAKE) -j 8 $(OUTS)

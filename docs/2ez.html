@@ -9,7 +9,7 @@
 <div id='container'>
   <div id="background"></div>
   <div class='section'>
-    <div class='docs'><a href="http://github.com/timm/2ez">home</a> | <a href="http://github.com/timm/2ez/issues">issues</a> | <a href="http://github.com/timm/2ez/LICENSE">license</a><hr> <h1>2ez.py</h1></div>
+    <div class='docs'><a href="http://github.com/timm/2ez">home</a> | <a href="http://github.com/timm/2ez/issues">issues</a> | <a href="https://github.com/timm/2ez/blob/main/LICENSE">issues</a><hr> <h1>2ez.py</h1></div>
   </div>
   <div class='clearall'>
   <div class='section' id='section-0'>
@@ -150,8 +150,9 @@ columns, <code>all</code> stores everything, <code>klass</code> is the class col
 A trailing &ldquo;-&rdquo; or &ldquo;+&rdquo; denotes a numeric goal we need to minimize or maximize to 0 or 1.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span> <span class="nf">NUM</span><span class="p">(</span><span class="n">txt</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">at</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-  <span class="k">return</span> <span class="n">o</span><span class="p">(</span><span class="n">isNum</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">txt</span><span class="o">=</span><span class="n">txt</span><span class="p">,</span> <span class="n">at</span><span class="o">=</span><span class="n">at</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hi</span><span class="o">=-</span><span class="mf">1E30</span><span class="p">,</span> <span class="n">lo</span><span class="o">=</span><span class="mf">1E30</span><span class="p">,</span>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">NUM</span><span class="p">(</span><span class="n">txt</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">at</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">has</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">o</span><span class="p">(</span><span class="n">isNum</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">txt</span><span class="o">=</span><span class="n">txt</span><span class="p">,</span> <span class="n">at</span><span class="o">=</span><span class="n">at</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hi</span><span class="o">=-</span><span class="mf">1E30</span><span class="p">,</span> <span class="n">lo</span><span class="o">=</span><span class="mf">1E30</span><span class="p">,</span> 
+           <span class="n">has</span><span class="o">=</span><span class="n">has</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="c1"># if has non-nil, used by the stats package</span>
            <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">m2</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">heaven</span><span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">txt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;-&quot;</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -315,6 +316,7 @@ Optionally, the rows in the new structure can be sorted.</p>
   <span class="n">num</span><span class="o">.</span><span class="n">lo</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">num</span><span class="o">.</span><span class="n">lo</span><span class="p">)</span>
   <span class="n">num</span><span class="o">.</span><span class="n">hi</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">num</span><span class="o">.</span><span class="n">hi</span><span class="p">)</span>
   <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">num</span><span class="o">.</span><span class="n">has</span><span class="p">:</span> <span class="n">num</span><span class="o">.</span><span class="n">has</span> <span class="o">+=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
     <span class="n">d</span>       <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">num</span><span class="o">.</span><span class="n">mu</span>
     <span class="n">num</span><span class="o">.</span><span class="n">mu</span> <span class="o">+=</span> <span class="n">d</span> <span class="o">/</span> <span class="n">num</span><span class="o">.</span><span class="n">n</span>
     <span class="n">num</span><span class="o">.</span><span class="n">m2</span> <span class="o">+=</span> <span class="n">d</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span>  <span class="n">num</span><span class="o">.</span><span class="n">mu</span><span class="p">)</span></pre></div>
@@ -487,7 +489,8 @@ Optionally, the rows in the new structure can be sorted.</p>
       </div>
       <hr />
 <h2>Sequential model optimization</h2>
-<p>Assumes we can access everyone&rsquo;s indepent variablesOptimization</p>
+<p>Assumes we can access everyone&rsquo;s indepent variables much cheaper than the dependent
+variables </p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -575,7 +578,7 @@ Optionally, the rows in the new structure can be sorted.</p>
   <span class="k">if</span> <span class="n">it</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>   <span class="k">return</span> <span class="s2">&quot;(&quot;</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;:</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">show</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span><span class="o">+</span><span class="s2">&quot;)&quot;</span>
   <span class="k">if</span> <span class="n">it</span> <span class="o">==</span> <span class="n">o</span><span class="p">:</span>      <span class="k">return</span> <span class="n">show</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
   <span class="k">if</span> <span class="n">it</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>    <span class="k">return</span> <span class="s1">&#39;&quot;&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;&quot;&#39;</span>
-  <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>  <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="vm">__name__</span>
+  <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>  <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="vm">__name__</span>
   <span class="k">return</span> <span class="n">x</span></pre></div>
     </div>
   </div>
