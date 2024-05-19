@@ -2,7 +2,7 @@
 href="https://github.com/timm/2ez/blob/main/LICENSE"><img
 alt="License" src="https://img.shields.io/badge/license-BSD2-red"></a> <img
 src="https://img.shields.io/badge/purpose-ai%20,%20se-blueviolet"> <img
-alt="Platform" src="https://img.shields.io/badge/platform-osx%20,%20linux-lightgrey"><hr>
+alt="Platform" src="https://img.shields.io/badge/platform-osx%20,%20linux-lightgrey"><br clear=all>
 <a href="/docs/less.md">less</a> |
 <a href="/docs/less.md">less</a> |
 <a href="/docs/less.md">less</a> |
