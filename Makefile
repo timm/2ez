@@ -13,7 +13,7 @@ help      :  ## show help
 			' $(MAKEFILE_LIST)
 
 saved     : ## save and push to main branch 
-	read -p "commit msg> " x; x=$${x:-saved};  git commit -am "$$x}"; git push;  git status; echo "[$$x], committed!"
+	read -p "commit msg> " x; x=$${x:-saved};  git commit -am "$$x"; git push;  git status; echo "[$$x], committed!"
 
 name:
 	read -p "word> " w; figlet -f mini -W $$w  | gawk '$$0 {print "#        "$$0}' |pbcopy
@@ -61,4 +61,4 @@ var/out/%.csv : data/process/%.csv ; ./2ez.py -f $< -R smo20 | tee $@
 var/out/%.csv : data/hpo/%.csv     ; ./2ez.py -f $< -R smo20 | tee $@
 
 eg1: 
-	echo $(OUTS) #$(MAKE) -j 8 $(OUTS)
+	$(MAKE) -j 8 $(OUTS)
