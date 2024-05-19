@@ -4,7 +4,7 @@
 2ez.py : an experiment in easier AI. Less is more.
 (C) 2024 Tim Menzies, timm@ieee.org, BSD-2.
 """
-#<br clear=all><hr>
+#<br clear=left><hr>  
 # ## Setting up
 import re,ast,sys,math,random,copy,traceback
 from fileinput import FileInput as file_or_stdin
