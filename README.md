@@ -1,6 +1,17 @@
+<img alt="Lua" src="https://img.shields.io/badge/python-v13.3-blue"> <a 
+href="https://github.com/timm/2ez/blob/main/LICENSE"><img
+alt="License" src="https://img.shields.io/badge/license-BSD2-red"></a> <img
+src="https://img.shields.io/badge/purpose-ai%20,%20se-blueviolet"> <img
+alt="Platform" src="https://img.shields.io/badge/platform-osx%20,%20linux-lightgrey"><hr>
+<a href="/docs/less.md">less</a> |
+<a href="/docs/less.md">less</a> |
+<a href="/docs/less.md">less</a> |
+<a href="/docs/less.md">less</a> 
+
+
 #  Lessons in Easier AI
 
-<img align=right width=300 src="docs/img/less.png">
+<img align=right width=300 src="/docs/img/less.png">
 
 How to  program simpler, smarter, faster, more flexible and
 understandable analytics. 
