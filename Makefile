@@ -17,7 +17,7 @@ name:
 install   : ## install as  a local python package
 	pip install -e  . --break-system-packages 
 
-~/tmp/%.html : %.py %.png ## .py ==> .html
+docs/%.html : %.py %.png ## .py ==> .html
 	mkdir -p $(dir $@)
 	pycco -d $(dir $@) $<
 	echo 'p {text-align: right;}' >> $(dir $@)/pycco.css
