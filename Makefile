@@ -2,7 +2,7 @@ HOME=<a href="http://github.com/timm/2ez">home</a>
 LICENSE=<a href="https://github.com/timm/2ez/blob/main/LICENSE">issues</a>
 ISSUES=<a href="http://github.com/timm/2ez/issues">issues</a>
 #----------------------------------------------------------
-SHELL     := bash 
+#SHELL     := bash 
 MAKEFLAGS += --warn-undefined-variables
 .SILENT:  
 Root=$(shell git rev-parse --show-toplevel)
