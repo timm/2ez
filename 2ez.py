@@ -1,16 +1,11 @@
 #!/usr/bin/env python3 -B
 # <!-- vim: set ts=2 sw=2 sts=2 et: -->
-
 """
-2ez.py : semi-supervised multi-objective optimization and explanation.
+2ez.py : an experiment in easier AI. Less is more.
 (C) 2024 Tim Menzies, timm@ieee.org, BSD-2.
-An experiment in writing Python like functional LISP, applying
-worse-is-better and less is more.
 """
-
-#--------- --------- --------- --------- --------- --------- --------- --------- --------
+#<br clear=all><hr>
 # ## Setting up
-
 import re,ast,sys,math,random,copy,traceback
 from fileinput import FileInput as file_or_stdin
 
@@ -40,15 +35,19 @@ the = o(
 
 # DATA stores rows, which are summarized in column headers.
 def DATA(): return o(rows=[], cols=[])
+
 # COLS is a factory that makes, and stores, the columns (`x,y` are the indepednet and depednet
 # columns, `all` stores everything, `klass` is the class column).
 def COLS(lst): return o(x=[], y=[], all=[], klass=None, names=lst)
+
 # SYMs summarize a stream of symbols.
 def SYM(txt=" ",at=0): return o(isNum=False, txt=txt, at=at, n=0, has={})
+
 # NUMs summarize a stream of numbers.
 # A trailing "-" or "+" denotes a numeric goal we need to minimize or maximize to 0 or 1.
-def NUM(txt=" ",at=0):
-  return o(isNum=True,  txt=txt, at=at, n=0, hi=-1E30, lo=1E30,
+def NUM(txt=" ",at=0,has=None):
+  return o(isNum=True,  txt=txt, at=at, n=0, hi=-1E30, lo=1E30, 
+           has=has, rank=0, # if has non-nil, used by the stats package
            mu=0, m2=0, heaven= 0 if txt[-1]=="-" else 1)
 
 #--------- --------- --------- --------- --------- --------- --------- --------- --------
@@ -110,6 +109,7 @@ def _add2num(num,x,n):
   num.lo = min(x, num.lo)
   num.hi = max(x, num.hi)
   for _ in range(n):
+    if num.has: num.has += [x]
     d       = x - num.mu
     num.mu += d / num.n
     num.m2 += d * (x -  num.mu)
@@ -163,7 +163,8 @@ def like4num(num,x):
 
 #--------- --------- --------- --------- --------- --------- --------- --------- --------
 # ## Sequential model optimization
-# Assumes we can access everyone's indepent variablesOptimization
+# Assumes we can access everyone's indepent variables much cheaper than the dependent
+# variables 
 
 def smo(data, score=lambda B,R: B-R):
   def guess(todo, done):

@@ -8,7 +8,7 @@ except(IOError, ImportError):
 
 setup(
     name='2ez',
-    description='a less is more approach to sequential model optimization'
+    description='a less is more approach to sequential model optimization',
     long_description=long_description,
     version='0.1.0',
     license="BSD2",

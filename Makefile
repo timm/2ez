@@ -1,6 +1,6 @@
-SSHELL     := bash 
-MAKEFLAGS += --warn-undefined-variables
-.SILENT:  
+#SSHELL     := bash 
+#MAKEFLAGS += --warn-undefined-variables
+#.SILENT:  
 Root=$(shell git rev-parse --show-toplevel)
 
 help      :  ## show help
@@ -17,11 +17,16 @@ name:
 install   : ## install as  a local python package
 	pip install -e  . --break-system-packages 
 
+HOME=<a href="http://github.com/timm/2ez">home<\/a>
+ISSUES=<a href="http://github.com/timm/2ez/issues">issues<\/a>
+LICENSE=<a href="http://github.com/timm/2ez/LICENSE">license<\/a>
+
 docs/%.html : %.py %.png ## .py ==> .html
 	mkdir -p $(dir $@)
 	pycco -d $(dir $@) $<
 	echo 'p {text-align: right;}' >> $(dir $@)/pycco.css
 	sed -i '' 's/$< : /<img src="$(basename $<).png" align=left width=170>&/' $@
+	sed -i '' 's?<h1>?$(HOME) | $(ISSUES) | $(LICENSE)<hr> &?' $@
 	cp $(basename $<).png $(dir $@)
 	cp $@ $(dir $@)/index.html
 	open $@
