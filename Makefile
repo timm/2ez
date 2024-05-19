@@ -12,8 +12,15 @@ help      :  ## show help
 			/^[^[:space:]].*##/ {printf "   \033[36m%-15s\033[0m : %s\n", $$1, $$2} \
 			' $(MAKEFILE_LIST)
 
-saved     : ## save and push to main branch 
-	read -p "commit msg> " x; x=$${x:-saved};  git commit -am "$$x"; git push;  git status; echo "[$$x], committed!"
+# saved     : ## save and push to main branch 
+# 	read -p "commit msg> " x; x=$${x:-saved};  git commit -am "$$x"; git push;  git status; echo "[$$x], committed!"
+
+saved:
+	git config --global user.email "timm@ieee.org"
+	git config --global user.name "timm"
+	git commit -m saved
+	git push -u origin main
+	git status
 
 name:
 	read -p "word> " w; figlet -f mini -W $$w  | gawk '$$0 {print "#        "$$0}' |pbcopy
