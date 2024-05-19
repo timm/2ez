@@ -91,7 +91,7 @@ configuration, cloud computing,  security, literature reviews,
 technical  debt,  vulnerability prediction, defect prediction,
 effort estimation,  and the management of open source software
 projects. And in all that work, one constant has been the  
-**compressability** of the data:
+_compressability_ of the data:
 
 - Many data sets can be pruned down to a surprisingly small set of rows and columns,
 without loss of signal.
@@ -107,11 +107,12 @@ our solutions.
 We are not the first to say these things.  For example, many
 researcher accept that higher dimensional data can often be reduced
 to a {\textbf lower dimensional latent manifolds} inside that
-high-dimensional space~\cite{zhu2005semi}.  As a consequence, many
+high-dimensional space [^zhu2005semi].  As a consequence, many
 data sets that appear to initially require many variables to describe,
-can actually be described by a {\textbf comparatively small number
-of variables}.
+can actually be described by a _comparatively small number
+of variables_.
 
+[^zhu2005semi]: ss
 
 
 ## Software Engineering Notes
