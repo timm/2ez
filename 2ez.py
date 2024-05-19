@@ -292,6 +292,7 @@ class eg:
     print(d2h(d, smo(d)[0]))
 
   def smo20():
+    "modify to show # evals"
     d= data(src=csv(the.file))
     b4=adds(NUM(), [d2h(d,row) for row in d.rows])
     now=adds(NUM(), [d2h(d, smo(d)[0]) for _ in range(20)])
