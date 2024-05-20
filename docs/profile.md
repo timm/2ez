@@ -7,7 +7,7 @@ worrying about efficiency in the wrong places and at the wrong
 times; premature optimization is the root of all evil (or at least
 most of it) in programming". -- Donald Knuth
 
-In version1 of this code, as the data sets grew larger, so did the runtimes.  E.g. for oe file
+In version1 of this code, as the data sets grew larger, so did the runtimes.  E.g. for one file
 with 53,662 rows, the code took 31 seconds for one run (so  ten and half minutes if called 20 times in an experiment).
 
 ```python
@@ -34,7 +34,7 @@ def smo(data, score=lambda B,R: B-R):
 
 **EXERCISE 1:** propose an optimization to the above.
 
-So we profiles the code to see what was going on:
+So we profiled the code to see what was going on:
 
 ```python
 def profileSmo():
@@ -42,10 +42,13 @@ def profileSmo():
     import pstats
     cProfile.run('smo(data(csv(the.file)))','/tmp/out1')
     p = pstats.Stats('/tmp/out1')
-    p.sort_stats('time').print_stats(20)
+    p.sort_stats('time').print_stats(20) # show the top 20, sorted by time
 ```
-We made the mistake of running the profile on the 53,000 problem. Profiling adds a lot of overhead to the execution.
-So that  31 seconds becoame 88 seconds (the lesson here is that maybe we should only profile smaller problems).
+
+> [!WARNING]
+We made the mistake of running the profile on the 53,662 problem. Profiling adds a lot of overhead to the execution.
+So that  31 seconds became
+88 seconds (the lesson here is that maybe we should only profile smaller problems).
 
 Here's what it printed. Note that 47 million times we call the like4num function:
 ```
@@ -71,7 +74,7 @@ ncalls  tottime  percall  cumtime  percall filename:lineno(function)
   1019597    0.266    0.000    1.447    0.000 /Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ast.py:33(parse)
     53663    0.249    0.000    3.619    0.000 /Users/timm/gits/timm/ezr/src/./ezr.py:281(<listcomp>)
 ```
-That function looks like this-- which does contain any complex nested accessors or large loops, so its a little hard to see what to optimize here.
+That function looks like this-- which does not contain any complex nested accessors or large loops, so its a little hard to see what to optimize here.
 
 ```python
 def like4num(num,x):
