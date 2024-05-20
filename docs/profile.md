@@ -92,9 +92,6 @@ Why is it called so many times?
 &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> 
 &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> 
 &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> 
-&nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> 
-&nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> 
-&nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> &nbsp;<p> 
 
 Looking at our `smo` code, we started thinking about the line:
 ```python
@@ -114,7 +111,7 @@ bad for fielding with 2 lines!
 
 Lessons learned.
 
-- Know how to use profiler!
+- Know how to use a profiler!
 - Code it clean first, before you optimize
 - Useful optimizations can be found by stepping back a little and thinking at more macro level.
 - Sometimes, a little randomization can be very useful.
