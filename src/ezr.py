@@ -1,9 +1,29 @@
 #!/usr/bin/env python3 -B
 # <!-- vim: set ts=2 sw=2 sts=2 et: -->
 """
-2ez.py : an experiment in easier AI. Less is more.
+ezr.py : an experiment in easier AI. Less is more.
 (C) 2024 Tim Menzies, timm@ieee.org, BSD-2.
+
+OPTIONS:
+  -a --any     #todo's to explore             = 100
+  -d --decs    #decimals for showing floats   = 3
+  -f --file    csv file for data              = ../data/misc/auto93.csv
+  -F --Far     how far to seek faraway        = 0.8
+  -k --k       bayes low frequency hack #1    = 1
+  -H --Half    #rows for searching for poles  = 128
+  -l --label   initial number of labelings    = 4
+  -L --Last    max allow labellings           = 30
+  -m --m       bayes low frequency hack #2    = 2
+  -n  --n      tinyN                          = 12
+  -N --N       smallN                         = 0.5
+  -p --p       distance function coefficient  = 2
+  -R --Run     start up action method         = help
+  -s --seed    random number seed             = 1234567891
 """
+# (FYI our seed is odious, pernicious, apocalyptic, deficient, and prime.)      
+# The above settings. Can be updated via command line.   
+# e.g. `./ezr.py -s $RANDOM` sets `the.seed` to a random value set by operating system.
+
 #<br clear=left><hr>  
 # ## Setting up
 import re,ast,sys,math,random,copy,traceback
@@ -14,21 +34,11 @@ class o:
   def __init__(i,**d): i.__dict__.update(d)
   def __repr__(i): return i.__class__.__name__+str(show(i.__dict__))
 
-# System defaults. Can be updated via command line.   
-# e.g. `./2ez.py -d 4` changes `the.decs` to 4.
-the = o(
-        decs  = 3,          # show floats to this many decimals
-        file  = "data/misc/auto93.csv",
-        k     = 1,          # naive bayes low frequency hack
-        label = 4,          # initial number of labellings
-        Last  = 30,         # max allow labellings
-        m     = 2,          # another naive bayes low frequecy backs
-        n     = 12,         # tinyN
-        N     = 0.5,        # smallN
-        Run   = "help",     # Start up action. See class `eg` (at bottom)
-        seed  = 1234567891, # an odious, pernicious, apocalyptic and deficient prime
-        top   = 0.8         # after sorting unlabelled, keep `top` items.
-)
+def coerce(s):
+  try: return ast.literal_eval(s) # <1>
+  except Exception:  return s
+
+the=o(**{m[1]:coerce(m[2]) for m in re.finditer(r"--(\w+)[^=]*=\s*(\S+)",__doc__)})
 
 #--------- --------- --------- --------- --------- --------- --------- --------- --------
 # ## Structs
@@ -48,7 +58,7 @@ def SYM(txt=" ",at=0): return o(isNum=False, txt=txt, at=at, n=0, has={})
 def NUM(txt=" ",at=0,has=None):
   return o(isNum=True,  txt=txt, at=at, n=0, hi=-1E30, lo=1E30, 
            has=has, rank=0, # if has non-nil, used by the stats package
-           mu=0, m2=0, heaven= 0 if txt[-1]=="-" else 1)
+           mu=0, m2=0, maximize = txt[-1] != "-")
 
 #--------- --------- --------- --------- --------- --------- --------- --------- --------
 # ## Constructors
@@ -132,13 +142,65 @@ def div(col):
 # Diverstiy of some columns (defaults to `data.cols.x`).
 def divs(data, cols=None): return {col.txt:div(col) for col in cols or data.cols.x}
 
-# Distance to `heaven` (which is the distance of the `y` vals to the best values).
-def d2h(data,row):
-  n = sum((norm(col,row[col.at]) - col.heaven)**2 for col in data.cols.y)
-  return (n / len(data.cols.y))**.5
-
 # Normalize `x` to 0..1
 def norm(num,x): return x if x=="?" else (x-num.lo)/(num.hi - num.lo - 1E-30)
+
+
+#--------- --------- --------- --------- --------- --------- --------- --------- --------
+# ## Distances
+
+# Distance to `heaven` (which is the distance of the `y` vals to the best values).
+def d2h(data,row):
+  n = sum(abs(norm(num,row[num.at]) - num.maximize)**the.p for num in data.cols.y)
+  return (n / len(data.cols.y))**(1/the.p)
+
+# Distances between two rows
+def dists(data,row1,row2):
+  n = sum(dist(col, row1[col.at], row2[col.at])**the.p for col in data.cols.x)
+  return (n / len(data.cols.x))**(1/the.p)
+
+# Distance between two values
+def dist(col,x,y):
+  if  x==y=="?": return 1
+  if not col.isNum: return x != y
+  x, y = norm(col,x), norm(col,y)
+  x = x if x !="?" else (1 if y<0.5 else 0)
+  y = y if y !="?" else (1 if x<0.5 else 0)
+  return abs(x-y)
+
+def neighbors(data,row1, rows=None):
+  return sorted(rows or data.rows, key=lambda row2: dists(data,row1,row2))
+
+#--------- --------- --------- --------- --------- --------- --------- --------- --------
+# ## Clusters
+def faraway(data,row,rows):
+  far = int( len(rows) * the.Far)
+  return neighbors(data,row,rows)[far]
+
+def twoFaraway(data,rows=None,before=None, sortp=False):
+  rows = rows or data.rows
+  x = before or faraway(data, random.choice(rows), rows)
+  y = faraway(data, x, rows)
+  if sortp and d2h(data,y) < d2h(data,x): x,y = y,x
+  return x, y,  dists(data,x,y)
+
+def half(data,rows,sortp=False,before=None):
+  def D(r1,r2): return dists(data,r1, r2)
+  mid = int(len(rows) // 2)
+  left,right,C = twoFaraway(data, random.choices(rows, k=min(the.Half, len(rows))),
+                            sortp=sortp, before=before)
+  tmp = sorted(rows, key=lambda row: (D(row,left)**2 + C**2 - D(row,right)**2)/(2*C))
+  return tmp[:mid], tmp[mid:], left
+
+def halves(data, rows=None, stop=None, rest=None, evals=1, before=None):
+  rows = rows or data.rows
+  stop = stop or 2*len(rows)**the.N
+  rest = rest or []
+  if len(rows) > stop:
+    lefts,rights,left  = half(data,rows, True, before)
+    return halves(data,lefts, stop, rest+rights, evals+1, left)
+  else:
+    return rows,rest,evals
 
 #--------- --------- --------- --------- --------- --------- --------- --------- --------
 # ## Likelihoods
@@ -158,7 +220,7 @@ def like4sym(sym,x,prior): return (sym.has.get(x, 0) + the.m*prior) / (sym.n + t
 def like4num(num,x):
   v     = div(num)**2 + 1E-30
   nom   = math.e**(-1*(x - mid(num))**2/(2*v)) + 1E-30
-  denom = (2*math.pi*v)**.5
+  denom = (2*math.pi*v) **0.5
   return min(1, nom/(denom + 1E-30))
 
 #--------- --------- --------- --------- --------- --------- --------- --------- --------
@@ -168,13 +230,13 @@ def like4num(num,x):
 
 def smo(data, score=lambda B,R: B-R):
   def guess(todo, done):
-    top  = int(.5 + len(todo) * the.top)
     cut  = int(.5 + len(done) ** the.N)
     best = clone(data, done[:cut])
     rest = clone(data, done[cut:])
     key  = lambda row: score(loglikes(best, row, len(done), 2),
                              loglikes(rest, row, len(done), 2))
-    return sorted(todo, key=key, reverse=True)[:top]
+    random.shuffle(todo)
+    return sorted(todo[:the.any], key=key, reverse=True) + todo[the.any:]
 
   def smo1(todo, done):
     for i in range(the.Last - the.label):
@@ -192,6 +254,15 @@ def ent(d):
   N = sum(v for v in d.values() if v > 0)
   return -sum(v/N*math.log(v/N,2) for v in d.values() if v > 0)
 
+def value(d,goal=True):
+  b,r,n = 1E-30,1E-30,1E-30
+  for k,v in d.items():
+    n += v
+    if k==goal: b += v
+    else: r += v
+  b,r = b/n, r/n
+  return b**2/(b+r)
+
 def show(x):
   it = type(x)
   if it == float:  return round(x,the.decs)
@@ -201,10 +272,6 @@ def show(x):
   if it == str:    return '"'+str(x)+'"'
   if callable(x):  return x.__name__
   return x
-
-def coerce(s):
-  try: return ast.literal_eval(s) # <1>
-  except Exception:  return s
 
 def csv(file=None):
   with file_or_stdin(file) as src:
@@ -218,10 +285,6 @@ def cli(d):
     for c,arg in enumerate(sys.argv):
       if arg == "-"+k[0]:
         d[k] = coerce("false" if v=="true" else ("true" if v=="false" else sys.argv[c+1]))
-
-def green(s):  return re.sub(r"^(...)", r"\033[92m\1\033[00m",s)
-def yellow(s): return re.sub(r"(.*)", r"\033[93m\1\033[00m",s)
-def cyan(s):   return re.sub(r"(.*)", r"\033[96m\1\033[00m",s)
 
 def btw(*args, **kwargs):
     print(*args, file=sys.stderr, end="", flush=True, **kwargs)
@@ -245,13 +308,9 @@ class eg:
   def all(): sys.exit(sum(run(s) for s in dir(eg) if s[0] !="_" and s !=  "all"))
 
   def help():
-    print(cyan(f"{__doc__}"))
-    print(yellow(f"Settings:"))
-    [print(green(f" -{k[0]} {k:5} = {v}")) for k,v in the.__dict__.items()]
-    print(yellow(f"\nStart-up commands:"))
-    [print(green(f" -R {k} ")) for k in sorted(dir(eg)) if k[0] !=  "_"]
-
-  def aa(): a=[]; a[3]
+    print(__doc__)
+    print("Start-up commands:")
+    [print(f"  -R {k} ") for k in sorted(dir(eg)) if k[0] !=  "_"]
 
   def the(): print(the)
 
@@ -279,17 +338,41 @@ class eg:
     print(show(mids(data1, cols=data1.cols.y)))
     print(data1.cols.names)
     for i,row in enumerate(data1.rows):
-      if i % 40 == 0: print(row)
+      if i % 40 == 0: print(i,"\t",row)
 
   def loglike():
     data1= data(csv(the.file))
     print(show(sorted(loglikes(data1,row,1000,2)
                       for i,row in enumerate(data1.rows) if i%10==0)))
 
+  def dists():
+    data1= data(csv(the.file))
+    print(show(sorted(dists(data1, data1.rows[0], row)
+                      for i,row in enumerate(data1.rows) if i%10==0)))
+    for _ in range(10):
+      print("")
+      x,y,C,=twoFaraway(data1)
+      print(x,C);print(y)
+
+  def halves():
+    data1= data(csv(the.file))
+    a,b,_ = half(data1,data1.rows)
+    print(len(a), len(b))
+    best,rest,n = halves(data1,stop=4)
+    print(n,d2h(data1,best[0]))
+
   def smo():
     d= data(csv(the.file))
     print(">",len(d.rows))
-    print(d2h(d, smo(d)[0]))
+    best = smo(d)
+    print(len(best),d2h(d, best[0]))
+
+  def profileSmo():
+    import cProfile
+    import pstats
+    cProfile.run('smo(data(csv(the.file)))','/tmp/out1')
+    p = pstats.Stats('/tmp/out1')
+    p.sort_stats('time').print_stats(20)
 
   def smo20():
     "modify to show # evals"

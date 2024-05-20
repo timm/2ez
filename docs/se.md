@@ -1,6 +1,20 @@
 .
 
-# SE tricks to make things 2ez
+# Just enough SE
+
+### Idioms
+#### Config from __doc__
+#### Types
+#### Tests
+test driven development;
+
+- set up
+  - reset seed, save settings
+- tear down
+  - reset settings
+
+## abstraction
+iterators, error hadlers
 
 ## Config, mattters
 - fast growth in config options
@@ -23,3 +37,6 @@ ss.sbyecode=true
 - interretation vs compilation
 - problems with traspiling
 
+## Randomizes algorihtms
+
+seed

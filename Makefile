@@ -3,8 +3,8 @@ LICENSE=<a href="https://github.com/timm/2ez/blob/main/LICENSE">issues</a>
 ISSUES=<a href="http://github.com/timm/2ez/issues">issues</a>
 #----------------------------------------------------------
 #SHELL     := bash 
-MAKEFLAGS += --warn-undefined-variables
-.SILENT:  
+#MAKEFLAGS += --warn-undefined-variables
+#.SILENT:  
 Root=$(shell git rev-parse --show-toplevel)
 
 help      :  ## show help
@@ -52,10 +52,10 @@ OUTS= $(subst data/config,var/out,$(wildcard data/config/*.csv)) \
       $(subst data/process,var/out,$(wildcard data/process/*.csv)) \
       $(subst data/hpo,var/out,$(wildcard data/hpo/*.csv))
 
-var/out/%.csv : data/config/%.csv  ; ./2ez.py -f $< -R smo20 | tee $@
-var/out/%.csv : data/misc/%.csv    ; ./2ez.py -f $< -R smo20 | tee $@
-var/out/%.csv : data/process/%.csv ; ./2ez.py -f $< -R smo20 | tee $@
-var/out/%.csv : data/hpo/%.csv     ; ./2ez.py -f $< -R smo20 | tee $@
+var/out/%.csv : data/config/%.csv  ; src/ezr.py -f $< -R smo20 | tee $@
+var/out/%.csv : data/misc/%.csv    ; src/ezr.py -f $< -R smo20 | tee $@
+var/out/%.csv : data/process/%.csv ; src/ezr.py -f $< -R smo20 | tee $@
+var/out/%.csv : data/hpo/%.csv     ; src/ezr.py -f $< -R smo20 | tee $@
 
 eg1: 
 	$(MAKE) -j 8 $(OUTS)

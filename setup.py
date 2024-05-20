@@ -7,13 +7,13 @@ except(IOError, ImportError):
     long_description = open('README.md').read()
 
 setup(
-    name='2ez',
+    name='ezr',
     description='a less is more approach to sequential model optimization',
     long_description=long_description,
     version='0.1.0',
     license="BSD2",
-    py_modules=['2ez'],
-    url='https://github.com/timm/2ez',
+    py_modules=['ezr'],
+    url='https://github.com/timm/ezr',
     author='Tim Menzies',
     author_email='timm@ieee.org',
     install_requires=[],
@@ -26,6 +26,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        2ez=2ez:main
+        ezr=ezr:main
     ''',
 )

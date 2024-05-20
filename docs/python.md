@@ -4,6 +4,8 @@
 
 ## \*lst,\* *kw
 
+e.g btw
+
 ## __dict__ 
 
 the o class
