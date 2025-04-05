@@ -1,6 +1,6 @@
 .
 
-# Profiling: a tutorial
+# Profiling: a small case study
 
 > " The real problem is that programmers have spent far too much time
 worrying about efficiency in the wrong places and at the wrong
